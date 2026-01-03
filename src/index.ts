@@ -19,6 +19,7 @@ async function main() {
   const args = process.argv.slice(2);
   const projectNameArg = args[0];
 
+  // Step 1: Select project type
   const projectType = await clack.select({
     message: 'What would you like to create?',
     options: [
@@ -40,20 +41,29 @@ async function main() {
     process.exit(0);
   }
 
+  // Step 2: Get project name
   let projectName: string | symbol;
 
   // If project name was provided as argument and is valid, use it
   if (projectNameArg && /^[a-z0-9-]+$/.test(projectNameArg)) {
     projectName = projectNameArg;
   } else {
-    // Otherwise, prompt for it
+    // Otherwise, prompt for it with default value
     projectName = await clack.text({
       message: 'Project name:',
-      placeholder: 'my-elysia-app',
+      placeholder: 'my-ely-app',
+      initialValue: 'my-ely-app',
       validate: (value) => {
-        if (!value) return 'Project name is required';
-        if (!/^[a-z0-9-]+$/.test(value))
+        if (!value || value.trim() === '') {
+          return 'Project name is required';
+        }
+        const trimmed = value.trim();
+        if (!/^[a-z0-9-]+$/.test(trimmed)) {
           return 'Project name must contain only lowercase letters, numbers, and hyphens';
+        }
+        if (trimmed.startsWith('-') || trimmed.endsWith('-')) {
+          return 'Project name cannot start or end with a hyphen';
+        }
         return undefined;
       },
     });
@@ -62,22 +72,31 @@ async function main() {
       clack.cancel('Operation cancelled');
       process.exit(0);
     }
+
+    // Trim and normalize the project name
+    projectName = (projectName as string).trim();
   }
 
   const targetDir = join(process.cwd(), projectName as string);
 
-  if (existsSync(targetDir) && readdirSync(targetDir).length > 0) {
-    const shouldOverwrite = await clack.confirm({
-      message: `Directory "${String(projectName)}" already exists and is not empty. Overwrite it?`,
-      initialValue: false,
-    });
+  // Step 3: Check if directory exists and handle it
+  if (existsSync(targetDir)) {
+    const dirContents = readdirSync(targetDir);
+    const isEmpty = dirContents.length === 0;
 
-    if (clack.isCancel(shouldOverwrite) || !shouldOverwrite) {
-      clack.cancel('Operation cancelled');
-      process.exit(0);
+    if (!isEmpty) {
+      const shouldOverwrite = await clack.confirm({
+        message: `Directory "${String(projectName)}" already exists and is not empty. Overwrite it?`,
+        initialValue: false,
+      });
+
+      if (clack.isCancel(shouldOverwrite) || !shouldOverwrite) {
+        clack.cancel('Operation cancelled');
+        process.exit(0);
+      }
+
+      rmSync(targetDir, { recursive: true, force: true });
     }
-
-    rmSync(targetDir, { recursive: true, force: true });
   }
 
   const spinner = clack.spinner();
@@ -137,7 +156,7 @@ async function main() {
       }
     }
 
-    spinner.stop('Project created successfully!');
+    spinner.stop('Project structure created!');
 
     const s = clack.spinner();
     s.start('Installing dependencies...');
@@ -156,6 +175,97 @@ async function main() {
 
     s.stop('Dependencies installed!');
 
+    // Step 4: Ask if user wants to initialize git
+    const initGit = await clack.confirm({
+      message: 'Initialize git repository?',
+      initialValue: true,
+    });
+
+    if (clack.isCancel(initGit)) {
+      clack.cancel('Operation cancelled');
+      process.exit(0);
+    }
+
+    if (initGit) {
+      // Check if git is available
+      const gitCheckProc = Bun.spawn(['git', '--version'], {
+        stdout: 'pipe',
+        stderr: 'pipe',
+      });
+      await gitCheckProc.exited;
+
+      if (gitCheckProc.exitCode !== 0) {
+        clack.log.warn(
+          'Git is not installed or not available. Skipping git initialization.',
+        );
+      } else {
+        const gitSpinner = clack.spinner();
+        gitSpinner.start('Initializing git repository...');
+
+        try {
+          const gitInitProc = Bun.spawn(['git', 'init'], {
+            cwd: targetDir,
+            stdout: 'pipe',
+            stderr: 'pipe',
+          });
+          await gitInitProc.exited;
+
+          if (gitInitProc.exitCode === 0) {
+            gitSpinner.stop('Git repository initialized');
+
+            // Make initial commit
+            gitSpinner.start('Creating initial commit...');
+
+            const gitAddProc = Bun.spawn(['git', 'add', '.'], {
+              cwd: targetDir,
+              stdout: 'pipe',
+              stderr: 'pipe',
+            });
+            await gitAddProc.exited;
+
+            if (gitAddProc.exitCode === 0) {
+              const gitCommitProc = Bun.spawn(
+                ['git', 'commit', '-m', 'Initial commit'],
+                {
+                  cwd: targetDir,
+                  stdout: 'pipe',
+                  stderr: 'pipe',
+                },
+              );
+              await gitCommitProc.exited;
+
+              if (gitCommitProc.exitCode === 0) {
+                gitSpinner.stop('Initial commit created');
+              } else {
+                gitSpinner.stop('Git initialized (commit failed)');
+                clack.log.warn(
+                  'Failed to create initial commit. You can commit manually later.',
+                );
+              }
+            } else {
+              gitSpinner.stop('Git initialized (add failed)');
+              clack.log.warn(
+                'Failed to stage files. You can add them manually later.',
+              );
+            }
+          } else {
+            gitSpinner.stop('Failed to initialize git');
+            clack.log.warn(
+              'Git initialization failed. You can initialize manually later.',
+            );
+          }
+        } catch {
+          gitSpinner.stop('Git initialization failed');
+          clack.log.warn(
+            'An error occurred during git initialization. You can initialize manually later.',
+          );
+        }
+      }
+    }
+
+    // Prepare next steps message
+    const projectTypeLabel =
+      projectType === 'monorepo' ? 'monorepo' : 'backend';
     const nextSteps =
       projectType === 'monorepo'
         ? `  cd ${String(projectName)}
@@ -165,12 +275,16 @@ async function main() {
   bun run dev          # Start backend on http://localhost:3000`;
 
     clack.outro(`
-Success! Your ElysiaJS project is ready.
+✨ Success! Your ElysiaJS ${projectTypeLabel} project is ready.
 
-Next steps:
+📁 Project created at: ${targetDir}
+
+🚀 Next steps:
 ${nextSteps}
 
-Check out the README.md for more information.
+📚 Check out the README.md for more information.
+
+Happy coding! 🎉
     `);
   } catch (error) {
     spinner.stop('Failed to create project');
