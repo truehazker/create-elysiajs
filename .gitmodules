@@ -1,0 +1,4 @@
+[submodule]
+[submodule "templates/monorepo/apps/backend"]
+	path = templates/monorepo/apps/backend
+	url = https://github.com/truehazker/elysia-boilerplate

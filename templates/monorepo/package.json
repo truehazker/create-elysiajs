@@ -2,9 +2,9 @@
   "private": true,
   "workspaces": ["apps/*"],
   "scripts": {
-    "dev:backend": "bun --filter=backend run dev",
+    "dev:backend": "bun --filter=elysia-boilerplate run dev",
     "dev:frontend": "bun --filter=frontend run dev",
-    "build:backend": "bun --filter=backend run build",
+    "build:backend": "bun --filter=elysia-boilerplate run build",
     "build:frontend": "bun --filter=frontend run build"
   },
   "devDependencies": {
