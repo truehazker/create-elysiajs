@@ -4,6 +4,7 @@ import {
   existsSync,
   mkdirSync,
   readdirSync,
+  rmSync,
   statSync,
 } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -65,9 +66,18 @@ async function main() {
 
   const targetDir = join(process.cwd(), projectName as string);
 
-  if (existsSync(targetDir)) {
-    clack.cancel(`Directory "${String(projectName)}" already exists`);
-    process.exit(1);
+  if (existsSync(targetDir) && readdirSync(targetDir).length > 0) {
+    const shouldOverwrite = await clack.confirm({
+      message: `Directory "${String(projectName)}" already exists and is not empty. Overwrite it?`,
+      initialValue: false,
+    });
+
+    if (clack.isCancel(shouldOverwrite) || !shouldOverwrite) {
+      clack.cancel('Operation cancelled');
+      process.exit(0);
+    }
+
+    rmSync(targetDir, { recursive: true, force: true });
   }
 
   const spinner = clack.spinner();
@@ -90,12 +100,8 @@ async function main() {
           mkdirSync(dest, { recursive: true });
         }
 
-        const entries = readdirSync(src);
-        for (const entry of entries) {
-          // Skip excluded directories/files
-          if (exclude.includes(entry)) {
-            continue;
-          }
+        for (const entry of readdirSync(src)) {
+          if (exclude.includes(entry) || entry.endsWith('.template')) continue;
 
           const srcPath = join(src, entry);
           const destPath = join(dest, entry);
@@ -110,8 +116,26 @@ async function main() {
       }
     }
 
-    // Copy template files (excluding node_modules and .git)
     copyRecursive(templateDir, targetDir, ['node_modules', '.git']);
+
+    // Handle template files: copy them to their intended locations
+    if (projectType === 'monorepo') {
+      const backendBiomeTemplate = join(
+        templateDir,
+        'apps',
+        'backend-biome.json.template',
+      );
+      const backendBiomeTarget = join(
+        targetDir,
+        'apps',
+        'backend',
+        'biome.json',
+      );
+
+      if (existsSync(backendBiomeTemplate)) {
+        copyFileSync(backendBiomeTemplate, backendBiomeTarget);
+      }
+    }
 
     spinner.stop('Project created successfully!');
 

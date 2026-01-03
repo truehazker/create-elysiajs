@@ -9,7 +9,7 @@
 
   "files": {
     "ignoreUnknown": false,
-    "includes": ["**/*.ts", "**/*.tsx", "**/*.json", "**/*.md"]
+    "includes": ["**/*.{ts,tsx,json,md}", "!templates"]
   },
 
   "formatter": {
