@@ -47,7 +47,9 @@ jobs:
         with:
           registry-url: 'https://registry.npmjs.org'
 
+      - name: Configure Bun npm authentication
+        run: |
+          echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > .npmrc
+
       - name: Publish to npm
-        env:
-          NPM_CONFIG_TOKEN: ${{ env.NODE_AUTH_TOKEN }}
         run: bun publish --access public --tolerate-republish
