@@ -120,8 +120,17 @@ async function main() {
 
     // Handle template files: copy them to their intended locations
     if (projectType === 'monorepo') {
-      const backendBiomeTemplate = join(templateDir, 'apps', 'backend-biome.json.template');
-      const backendBiomeTarget = join(targetDir, 'apps', 'backend', 'biome.json');
+      const backendBiomeTemplate = join(
+        templateDir,
+        'apps',
+        'backend-biome.json.template',
+      );
+      const backendBiomeTarget = join(
+        targetDir,
+        'apps',
+        'backend',
+        'biome.json',
+      );
 
       if (existsSync(backendBiomeTemplate)) {
         copyFileSync(backendBiomeTemplate, backendBiomeTarget);
