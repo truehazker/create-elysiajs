@@ -50,4 +50,13 @@ jobs:
       - name: Publish to npm
         env:
           NPM_CONFIG_TOKEN: ${{ env.NODE_AUTH_TOKEN }}
-        run: bun publish --access public --tolerate-republish
+        run: |
+          # Verify token is set (without exposing it)
+          if [ -z "$NPM_CONFIG_TOKEN" ]; then
+            echo "::error::NPM_CONFIG_TOKEN is not set"
+            exit 1
+          fi
+          echo "✓ NPM_CONFIG_TOKEN is set"
+          
+          # Publish using Bun
+          bun publish --access public --tolerate-republish --registry https://registry.npmjs.org
