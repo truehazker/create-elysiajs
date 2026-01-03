@@ -1,19 +1,60 @@
 {
   "name": "create-elysiajs",
   "version": "0.1.0",
-  "description": "Scaffold ElysiaJS projects with ease",
+  "description": "Scaffold production-ready ElysiaJS projects with ease using Bun - choose between backend-only or full-stack monorepo templates",
   "type": "module",
+  "author": {
+    "name": "truehazker",
+    "url": "https://github.com/truehazker"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/truehazker/create-elysiajs.git"
+  },
+  "homepage": "https://github.com/truehazker/create-elysiajs#readme",
+  "bugs": {
+    "url": "https://github.com/truehazker/create-elysiajs/issues"
+  },
+  "keywords": [
+    "elysiajs",
+    "elysia",
+    "bun",
+    "template",
+    "scaffold",
+    "cli",
+    "create",
+    "generator",
+    "boilerplate",
+    "starter",
+    "monorepo",
+    "fullstack",
+    "backend",
+    "drizzle",
+    "postgresql",
+    "react",
+    "tanstack-router"
+  ],
   "bin": {
     "create-elysiajs": "./src/index.ts"
   },
-  "files": ["src", "templates"],
+  "files": [
+    "src",
+    "templates",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "dev": "bun run src/index.ts",
     "build": "bun build src/index.ts --compile --outfile dist/create-elysiajs"
   },
-  "keywords": ["elysiajs", "bun", "template", "scaffold", "cli"],
-  "author": "truehazker",
-  "license": "MIT",
+  "engines": {
+    "bun": ">=1.0.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "dependencies": {
     "@clack/prompts": "^0.11.0"
   },
