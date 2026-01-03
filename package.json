@@ -38,12 +38,7 @@
   "bin": {
     "create-elysiajs": "./src/index.ts"
   },
-  "files": [
-    "src",
-    "templates",
-    "README.md",
-    "LICENSE"
-  ],
+  "files": ["src", "templates", "README.md", "LICENSE"],
   "scripts": {
     "dev": "bun run src/index.ts",
     "build": "bun build src/index.ts --compile --outfile dist/create-elysiajs"
