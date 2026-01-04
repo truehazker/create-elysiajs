@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.3] - 2026-01-04
+
+### Added
+
+- Added scripts for creating and extracting `templates.zip` archive (to preserve .gitignore files) in the published package
+
 ### Changed
 
 - Refactored codebase for better maintainability and organization
