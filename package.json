@@ -1,6 +1,6 @@
 {
   "name": "create-ely",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Scaffold production-ready ElysiaJS projects with ease using Bun - choose between backend-only or full-stack monorepo templates",
   "type": "module",
   "author": {

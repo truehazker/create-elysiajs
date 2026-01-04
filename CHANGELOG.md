@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.5] - 2026-01-04
+
+### Fixed
+
+- Fixed demo video not being displayed in the README.md on npmjs page
+
+### Changed
+
+- Changed file type of the video from .mp4 to .gif
+
 ## [0.1.4] - 2026-01-04
 
 ### Fixed
