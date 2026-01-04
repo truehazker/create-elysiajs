@@ -1,49 +1,60 @@
 # create-ely
 
-Scaffold ElysiaJS projects with ease using [Bun](https://bun.sh).
+[![Lint](https://github.com/truehazker/create-ely/actions/workflows/lint.yml/badge.svg)](https://github.com/truehazker/create-ely/actions/workflows/lint.yml)
+[![npm version](https://img.shields.io/npm/v/create-ely.svg)](https://www.npmjs.com/package/create-ely)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Usage
+[![Bun](https://img.shields.io/badge/Bun-000000?logo=bun)](https://bun.sh)
+[![ElysiaJS](https://img.shields.io/badge/ElysiaJS-6366f1?logo=elysia&logoColor=white)](https://elysiajs.com)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 
-Create a new ElysiaJS project:
+The fastest way to scaffold production-ready [ElysiaJS](https://elysiajs.com) projects with [Bun](https://bun.sh).
 
-```bash
-bunx create-ely my-project
-```
+<div align="center">
+  <video src="./assets/demo.mp4" width="100%" controls></video>
+</div>
 
-You'll be prompted to choose between:
+## Quick Start
 
-- **Backend only** - ElysiaJS API with PostgreSQL, Drizzle ORM
-- **Monorepo** - Backend + Frontend (React with TanStack Router)
-
-## Templates
-
-### Backend Only
-
-A production-ready ElysiaJS backend with:
-
-- PostgreSQL database with Drizzle ORM
-- Type-safe API with OpenAPI documentation
-- Global error handling
-- Structured logging with Pino
-- Docker support
-- Environment validation
-
-### Monorepo
-
-Full-stack setup with:
-
-- Backend: Everything from Backend Only template
-- Frontend: React + TanStack Router + Vite
-- Workspace configuration with Bun
-
-## Development
-
-To test the CLI locally:
+Create a new project:
 
 ```bash
-bun link
-bunx create-ely
+bun create ely
 ```
+
+Or with a project name:
+
+```bash
+bun create ely my-project
+```
+
+You'll be prompted to choose:
+
+- **Backend Only** - API-first ElysiaJS backend with PostgreSQL, Drizzle ORM, and OpenAPI docs
+- **Monorepo** - Full-stack setup with React frontend, TanStack Router, and shared workspace
+
+## What's Included
+
+**Backend Template:**
+
+- PostgreSQL + Drizzle ORM for type-safe database access
+- OpenAPI documentation out of the box
+- Global error handling and structured logging (Pino)
+- Docker support for development and production
+- Environment validation with type safety
+
+**Monorepo Template:**
+
+- Everything from Backend template
+- React frontend with TanStack Router and Vite
+- Bun workspaces for seamless monorepo management
+
+## Contributing
+
+> **⚠️ Important:** This project uses Git submodules for templates. Make sure to clone with `git clone --recurse-submodules` or run `git submodule update --init --recursive` after cloning.
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for development setup and guidelines.
 
 ## License
 
