@@ -42,6 +42,7 @@
     "src",
     "templates.zip",
     "scripts/postinstall.ts",
+    "assets",
     "README.md",
     "LICENSE"
   ],
