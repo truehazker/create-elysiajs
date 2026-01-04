@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed templates not being extracted when using `bunx create-ely` due to Bun's default-secure lifecycle scripts policy
+- Added runtime template extraction to ensure templates are available regardless of postinstall execution
+
 ## [0.1.3] - 2026-01-04
 
 ### Added
