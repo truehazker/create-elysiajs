@@ -6,6 +6,9 @@ out
 dist
 *.tgz
 
+# generated templates archive (created during prepare script)
+templates.zip
+
 # code coverage
 coverage
 *.lcov
