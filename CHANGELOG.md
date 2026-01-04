@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Refactored codebase for better maintainability and organization
+- Extracted `copyRecursive` and validation logic into `src/utils.ts`
+- Extracted git initialization logic into `src/git.ts`
+- Extracted template setup logic into `src/template.ts`
+- Centralized constants and configuration into `src/constants.ts`
+- Reduced main function complexity from 296 to 60 lines
+- Added JSDoc comments to all exported functions
+- Improved code reusability and testability
+
 ## [0.1.2] - 2026-01-03
 
 ### Added
